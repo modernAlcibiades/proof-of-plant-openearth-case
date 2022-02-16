@@ -23,6 +23,7 @@ Stack Components
 - Serverless frontend form (React)
 - Trinsic API for QR code
 - nft.storage to upload and access IPFS content
+- Firebase deployment
 
 Workflow
 - Upload information for verification

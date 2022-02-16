@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { hot } from "react-hot-loader";
+import React, { createContext, useReducer } from "react";
+import initState from "./initState";
+import reducer from "./reducer";
+
+import AppContent from "./Components/AppContent";
+import "./App.css";
+
+export const AppStateContext = createContext(initState);
 
 function App() {
+  const [state, dispatch] = useReducer(reducer, initState);
+  console.log("Here");
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppStateContext.Provider value={[state, dispatch]}>
+      <AppContent/>
+    </AppStateContext.Provider>
   );
 }
 
-export default App;
+export default module.hot ? hot(module)(App) : App;

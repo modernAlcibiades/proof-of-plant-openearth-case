@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+# Proof of Plant
+As a Web3 Engineer interested in improving planetary resilience, working alongside a team of like minded people, Proof of Plant is an attempt to acknowledge and validate the actions like `planting a tree` by members of the community, using SSI based certification.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
+We need people to plant trees. To coordinate the efforts across the world, a blockchain based solution can be used to certify that trees were planted.The species of the tree and location are important to keep track of progress over time and preserve ecological balance. Date and time of planting is an important data point from verification and planning point of view. For example, if a lot of people are planting in a certain region at a certain time, they can be used for peer-to-peer certification, and to foster a local community.
 
-## Available Scripts
+For each plant, a minimal certification should store the following information
+- Time and date of planting (YYYY/MM/DD HH:MM)
+- Species (ICNafp)
+- Location (Lat, Long in decimal degrees)
+- Common Name
 
-In the project directory, you can run:
+The scheme can be modified to include other relevant information.
+- Age of the plant at the time of planting (0 years for seedlings)
+- Plant picture with planter
+- Endangered status
 
-### `npm start`
+## Solutions
+### v0.1
+A decentralized serverless application without any verification. In this case, the submission is treated as public and valid, and can be used to generate a credential, and does not need any action from the developers / organization.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Stack Components
+- Serverless frontend form (React)
+- Trinsic API for QR code
+- nft.storage to upload and access IPFS content
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Workflow
+- Upload information for verification
+- Store a copy on IPFS, get IPFS hash
+- Create QR code from relevant information for certification
+- Scan QR code on wallet
 
-### `npm test`
+Notes
+- Desktop frontend should show a QR code that can be scanned via Trinsic app
+- Mobile frontend should have a clickable link to open Trinsic app
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## TO DO
+- Build a Kanban / Jira / Trello board moving forward
+- Server hosted on AWS (for secure submission and validation)
+  - Nodejs / Django backend with MongoDB
+  - Verify submitted information
+- Android / IOS app 
+  - Location data (maps API integration)
+  - Image (camera API integration)
+  - Trinsic SDK (currently in beta)
+- Features
+  - User dashboard
+  - Achievements and Goals for individuals
+  - Events
+  - Display certification (with pictures maybe)

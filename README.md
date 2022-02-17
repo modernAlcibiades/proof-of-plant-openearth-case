@@ -16,7 +16,7 @@ The scheme can be modified to include other relevant information.
 - Endangered status
 
 ## Solutions
-### v0.1
+### v0.1 - Deployed at https://proof-of-plant.web.app/
 A decentralized serverless application without any verification. In this case, the submission is treated as public and valid, and can be used to generate a credential, and does not need any action from the developers / organization.
 
 **Stack Components**
@@ -46,8 +46,6 @@ A decentralized serverless application without any verification. In this case, t
 ![Overlay](./src/media/Screen_modal.png)
 ![Trinsic Page : QR code and info](./src/media/Screen_trinsic.png)
 ![Phone Screen : Credential Issuance](./src/media/Screen_credential_phone.jpg)
-
-
 
 **Known Issues**
 - [Material UI labels do not respect z-index]{https://github.com/mui/material-ui/issues/23499}

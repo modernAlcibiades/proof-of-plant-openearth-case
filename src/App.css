@@ -1,57 +1,67 @@
 body {
-    background-image: url("media/pexels-scott-webb-305827.jpg");
+  background-image: url("media/pexels-scott-webb-305827.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
-}
-
-.App {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.AppContent {
-  width: 100%;
-  display: 'flex';
   align-items: 'center';
-  justify-content : 'center';
-  margin: 0;
+  text-align: center;
+  justify-content : 'space-around';
+  margin: 16px auto;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
   color: #e6e6e6;
-  text-align: left;
-  background-color: #444;
+}
+
+
+.heading {
+  padding:16px;
+  display: flex;
+  justify-content: center;
+  margin: 16px auto;
+  align-items: center;
+  max-width: 600px;
 }
 
 .App-logo {
-  height: 40vmin;
+  max-width:100%;
   pointer-events: none;
 }
 
+.title {
+  font-size: 4rem;
+  font-weight: 400;
+  color: #d1fffb;
+}
+
 .PlantForm {
-  display: flex;
-  justify-content: space-around;
+  display:flex;
+  justify-content: center;
   align-items: center;
 }
+
 
 .formWrapper {
   padding:16px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  margin: 16px auto;
   align-items: center;
   max-width: 600px;
 }
 
 .formContent {
   display: flex;
-  justify-content: space-around;
-  align-items:"flex-start";
+  justify-content: center;
+}
+
+.formLabel {
+  text-align: right;
 }
 
 .displayImg {
-  width:90%;
+  max-width:500px;
+  margin: 8px, auto;
 }
 
 .App-link {
@@ -61,13 +71,13 @@ body {
 .btn {
   display: inline-block;
   font-weight: 400;
-  color: #212529;
+  color: #194979;
   text-align: center;
   vertical-align: middle;
 }
 
 .btn:hover {
-  color: #212529;
+  color: #117ae4;
   text-decoration: none;
 }
 

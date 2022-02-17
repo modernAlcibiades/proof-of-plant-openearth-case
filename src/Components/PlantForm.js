@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Paper , Grid} from "@material-ui/core";
+import { Button, Paper , Grid, Select, MenuItem} from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import DateTimePicker from 'react-datetime-picker';
 
 import { useInput } from "../Hooks/useInput";
-import logo from '../media/JoshuaTree_3.png';
 
 const defaultValues = {
     datetime: "E.g. 2022/02/16 23:59", // TODO : Switch to UTC
@@ -33,10 +32,14 @@ export default function PlantForm() {
     const { value: lng, setValue: setLongitude, bind: bindLng, reset: resetLng } = useInput(0.0);
     const { value: species, bind: bindSpecies, reset: resetSpecies } = useInput("Yucca brevifolia");
     const { value: stage, bind: bindStage, reset: resetStage } = useInput("");
-    const { value: displayImg, bind: bindDisplayImg, reset: resetDisplayImg } = useInput(logo);
+    const { value: displayImg, setValue: setDisplayImg, bind: bindDisplayImg, reset: resetDisplayImg } = useInput("");
     const [datetime, setDatetime ] = useState(new Date());
 
     // Event handlers
+    const getInstructions = () => {
+        console.log("Instructions should pop up");
+    }
+
     const upload_to_ipfs = async event => {
         let object = {
             Datetime: datetime,
@@ -49,7 +52,8 @@ export default function PlantForm() {
     }
 
     const uploadImage = (event) => {
-        console.log(event.target.files)
+        setDisplayImg(URL.createObjectURL(event.target.files[0]));
+        console.log(event.target.files);
     }
 
     const generateQR = event => {
@@ -84,38 +88,46 @@ export default function PlantForm() {
                     <h2>Verify your Proof of Plant</h2>
                 </Grid>
 
+                <Grid item xs={12}>
+                    <Button className="btn"
+                        onClick={getInstructions}>
+                        Instructions
+                    </Button>
+                </Grid>
+
                 <Grid item xs={6}>
-                    <label>Date / Time of Planting</label>
+                    <div className="formLabel">Date / Time of Planting</div>
                 </Grid>
                 <Grid item xs={6}>
                     <DateTimePicker value={datetime} onChange={setDatetime}/>
                 </Grid>
 
                 <Grid item xs={6}>
-                    <label>Location</label>
-                </Grid>
-                <Grid item xs={6}>
-                    <Button className="btn"
-                        onClick={getCurrentLocation}>
-                        Use Current Location
-                    </Button>
+                    <div className="formLabel">Location</div>
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <label>Latitude</label>
+                    <div className="formLabel">Latitude</div>
                 </Grid>
                 <Grid item xs={6} md={3}>
                     <TextField className="latitude"
                         type="text" {...bindLat} />
                 </Grid>
+                <Grid item xs={6} md={6}></Grid>
                 <Grid item xs={6} md={3}>
-                    <label>Longitude</label>
+                    <div className="formLabel">Longitude</div>
                 </Grid>
                 <Grid item xs={6} md={3}>
                     <TextField className="longitude"
                         type="text" {...bindLng} />
                 </Grid>
+                <Grid item xs={12}>
+                    <Button className="btn"
+                        onClick={getCurrentLocation}>
+                        Use Current Location
+                    </Button>
+                </Grid>
                 <Grid item xs={6}>
-                    <label>Species</label>
+                    <div className="formLabel">Species</div>
                 </Grid>
                 <Grid item xs={6}>
                     <TextField className="formInput"
@@ -123,33 +135,39 @@ export default function PlantForm() {
                 </Grid>
 
                 <Grid item xs={6}>
-                    <label>Growth Stage</label>
+                    <div className="formLabel">Growth Stage</div>
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField className="formInput"
-                        type="text" {...bindStage} />
+                    <Select
+                        label="Choose stage"
+                        id="growth-stage-select"
+                        {...bindStage}
+                    >
+                        <MenuItem value={"Seed"}/>
+                        <MenuItem value={"Seedling"}/>
+                        <MenuItem value={"Young Plant"} />
+                        <MenuItem value={"Mature Plant"} />
+                    </Select>
                 </Grid>
 
                 <Grid item xs={6}>
-                    <label>Upload Image Proof</label>
+                    <div className="formLabel">Upload Image Proof</div>
                 </Grid>
                 <Grid item xs={6}>
                     <input type="file" onChange={uploadImage} />
                 </Grid>
 
-                <Grid item xs={6} md={8}>
-                    <Paper className="displayImg" >
-                        <img src={displayImg} {...bindDisplayImg} />
-                    </Paper>
-                    
-                </Grid>
-                
-                <Grid item xs={6} md = {4}>
+                <Grid item xs={6}>
                     <Button className="btn"
                         onClick={generateQR}>
                         Generate QR
                     </Button>
                 </Grid>
+
+                <Grid item xs={12}>
+                    <img className="displayImg" src={displayImg} {...bindDisplayImg} />
+                </Grid>
+
             </Grid>
         </Paper>
     );

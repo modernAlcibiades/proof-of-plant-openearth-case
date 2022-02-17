@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Paper, Grid } from "@mui/material";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import DateTimePicker from 'react-datetime-picker';
-import { File } from 'nft.storage';
+import Modal from "react-modal";
+import ReactLoading from "react-loading";
 
 import { useInput } from "../Hooks/useInput";
 import { AppStateContext } from "../App";
@@ -60,13 +61,25 @@ export default function PlantForm() {
     const { value: tribute, setValue: setTribute, bind: bindTribute, reset: resetTribute } = useInput("");
     const { value: uri, setValue: setUri, bind: bindUri, reset: resetUri } = useInput("");
 
-    const { value: errorMessage, setValue: setErrorMessage, bind:bindErrorMessage, reset:resetErrorMessage} = useInput("");
+    const { value: errorMessage, setValue: setErrorMessage, bind: bindErrorMessage, reset: resetErrorMessage } = useInput("");
+    
+    // Modal Display settings
+    const [isOpen, setIsOpen] = useState(false);
+    const [qr, setQR] = useState("");
+    const [modalText, setModalText] = useState(<label>{"Wait while we upload and certify your submission..."}</label>);
+    // const [modalState, setModalState] = useState("return false;");
+    const [modalURL, setModalURL] = useState("");
+
+    //const [modalURL, setModalURL] = useState("https://trinsic.studio/url/e3d5b1f4-4c81-4c2e-904f-12fc9a75f1e6");
 
     // Event handlers
+    function toggleModal() {
+        setIsOpen(!isOpen);
+    }
+
     const getInstructions = () => {
         console.log("Instructions should pop up");
     }
-
 
     const uploadImage = (event) => {
         setUri(URL.createObjectURL(event.target.files[0]));
@@ -94,6 +107,11 @@ export default function PlantForm() {
     }
 
     const generateQR = async event => {
+        toggleModal();
+        let url = "https://trinsic.studio/url/06b09ac9-fb04-4ce6-b5bc-cc3710fe351e";
+        setModalURL(url);
+        setModalText(<a className="App-link" href={modalURL} target="_blank">Visit Trinsic for Offer Url and QR Code</a>);
+        return;
         try {
             if (lat > 180 || lat < -180) {
                 setErrorMessage(`Invalid Latitude ${lat}`);
@@ -112,6 +130,10 @@ export default function PlantForm() {
                 credentialValues: metadata
             });
             console.log(credential);
+            //setQR(URL.createObjectURL(credential.offerData));
+            setModalURL(credential.offerUrl);
+            setModalText(<a href={credential.offerUrl} target="_blank">Visit Trinsic for Offer Url and QR Code</a>);
+            //window.open(URL, '_blank');
         } catch (err) {
             console.log(err)
         }
@@ -132,126 +154,142 @@ export default function PlantForm() {
     }
 
     return (
-        <Paper className='formWrapper'>
-            <Grid className="formContent" container spacing={2}>
-                <Grid item xs={12}>
-                    <h2>Verify your Proof of Plant</h2>
-                </Grid>
+        <div>
+            <Paper className='formWrapper'>
+                <Grid className="formContent" container spacing={2}>
+                    <Grid item xs={12}>
+                        <h2>Verify your Proof of Plant</h2>
+                    </Grid>
 
-                <Grid item xs={12}>
-                    <Button className="btn"
-                        onClick={getInstructions}>
-                        Instructions
-                    </Button>
-                </Grid>
+                    <Grid item xs={12}>
+                        <Button className="btn"
+                            onClick={getInstructions}>
+                            Instructions
+                        </Button>
+                    </Grid>
 
-                <Grid item xs={5}>
-                    <div className="formLabel">Date / Time of Planting</div>
-                </Grid>
-                <Grid item xs={7}>
-                    <DateTimePicker value={datetime} onChange={setDatetime}/>
-                </Grid>
+                    <Grid item xs={5}>
+                        <div className="formLabel">Date / Time of Planting</div>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <DateTimePicker value={datetime} onChange={setDatetime}/>
+                    </Grid>
 
-                <Grid item xs={5}>
-                    <div className="formLabel">Location</div>
-                </Grid>
-                <Grid item xs={7} md={2}>
-                    <div className="formLabel">Latitude</div>
-                </Grid>
-                <Grid item xs={7} md={5}>
-                    <TextField className="latitude"
-                        type="text" {...bindLat} />
-                </Grid>
-                <Grid item xs={5}></Grid>
-                <Grid item xs={7} md={2}>
-                    <div className="formLabel">Longitude</div>
-                </Grid>
-                <Grid item xs={7} md={5}>
-                    <TextField className="longitude"
-                        type="text" {...bindLng} />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button className="btn"
-                        onClick={getCurrentLocation}>
-                        Use Current Location
-                    </Button>
-                </Grid>
-                <Grid item xs={5}>
-                    <div className="formLabel">Species</div>
-                </Grid>
-                <Grid item xs={7}>
-                    <Autocomplete
-                        className="dropdown"
-                        freeSolo
-                        id="combo-box-demo"
-                        options={list_species.map((x) => {
-                            return `${x.name} (${x.species})`;
-                        })}
-                        sx={{ width: 300 }}
-                        value={species}
-                        onChange={(event, newValue) => {
-                            setSpecies(newValue);
-                        }}
-                        onInputChange={(event, newValue) => {
-                            console.log(newValue);
-                            setSpecies(newValue);
-                        }}
-                        renderInput={(params) => <TextField label="Choose Species" {...params} />}
-                    />
-                </Grid>
+                    <Grid item xs={5}>
+                        <div className="formLabel">Location</div>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <TextField className="latitude"
+                            label="Latitude"
+                            type="text" {...bindLat} />
+                    </Grid>
+                    <Grid item xs={5}></Grid>
+                    <Grid item xs={7}>
+                        <TextField className="longitude"
+                            label="Longitude"
+                            type="text" {...bindLng} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button className="btn"
+                            onClick={getCurrentLocation}>
+                            Use Current Location
+                        </Button>
+                    </Grid>
+                    <Grid item xs={5}>
+                        <div className="formLabel">Species</div>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <Autocomplete
+                            className="dropdown"
+                            freeSolo
+                            id="combo-box-demo"
+                            options={list_species.map((x) => {
+                                return `${x.name} (${x.species})`;
+                            })}
+                            sx={{ width: 300 }}
+                            value={species}
+                            onChange={(event, newValue) => {
+                                setSpecies(newValue);
+                            }}
+                            onInputChange={(event, newValue) => {
+                                console.log(newValue);
+                                setSpecies(newValue);
+                            }}
+                            renderInput={(params) => <TextField className="formInput" label="Choose Species" {...params} />}
+                        />
+                    </Grid>
 
-                <Grid item xs={5}>
-                    <div className="formLabel">Growth Stage</div>
-                </Grid>
-                <Grid item xs={7}>
-                    <Autocomplete
-                        className="dropdown"
-                        disablePortal
-                        id="combo-box-demo"
-                        options={list_stages}
-                        sx={{ width: 300 }}
-                        value={stage}
-                        onChange={(event, newValue) => {
-                            setStage(newValue);
-                        }}
-                        renderInput={(params) => <TextField label="Choose Stage" {...params}/>}
-                    />
-                </Grid>
+                    <Grid item xs={5}>
+                        <div className="formLabel">Growth Stage</div>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <Autocomplete
+                            className="dropdown"
+                            disablePortal
+                            id="combo-box-demo"
+                            options={list_stages}
+                            sx={{ width: 300 }}
+                            value={stage}
+                            onChange={(event, newValue) => {
+                                setStage(newValue);
+                            }}
+                            renderInput={(params) => <TextField className="formInput" label="Choose Stage" {...params}/>}
+                        />
+                    </Grid>
 
-                <Grid item xs={5}>
-                    <div className="formLabel">Dedicated to</div>
-                </Grid>
-                <Grid item xs={7}>
-                    <TextField className="formInput"
-                        type="text" {...bindTribute} />
-                </Grid>
+                    <Grid item xs={5}>
+                        <div className="formLabel">Dedicated to</div>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <TextField className="formInput"
+                            type="text" {...bindTribute} />
+                    </Grid>
 
-                <Grid item xs={5}>
-                    <div className="formLabel">Upload Image Proof</div>
-                </Grid>
-                <Grid item xs={7}>
-                    <input type="file" onChange={uploadImage} />
-                </Grid>
+                    <Grid item xs={5}>
+                        <div className="formLabel">Upload Image Proof</div>
+                    </Grid>
+                    <Grid item xs={7}>
+                        <input type="file" onChange={uploadImage} />
+                    </Grid>
 
-                <Grid item xs={12}>
-                    <Button className="btn"
-                        onClick={generateQR}>
-                        Generate QR
-                    </Button>
-                </Grid>
+                    <Grid item xs={12}>
+                        <Button className="btn"
+                            onClick={generateQR}>
+                            Generate QR
+                        </Button>
+                    </Grid>
 
-                <Grid item xs={12}>
-                    <div className="error-message">
-                        {errorMessage}
+                    <Grid item xs={12}>
+                        <div className="error-message">
+                            {errorMessage}
+                        </div>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <img className="displayImg" src={uri} {...bindDisplayImg} />
+                    </Grid>
+
+                </Grid>
+            </Paper>
+            <Modal
+                className="modal"
+                isOpen={isOpen}
+                onRequestClose={toggleModal}
+                contentLabel="My dialog"
+                ariaHideApp={false}
+            >
+                <div classname="formWrapper">
+                    <ReactLoading type="spinningBubbles" color="#fff" />
+                    <div className="formContent">
+                        { //Scan QR code
+                        }
                     </div>
-                </Grid>
-
-                <Grid item xs={12}>
-                    <img className="displayImg" src={uri} {...bindDisplayImg} />
-                </Grid>
-
-            </Grid>
-        </Paper>
+                    <img src={qr} />
+                    {modalText}
+                </div>
+                <Button className="btn" onClick={toggleModal}>Close</Button>
+            </Modal>
+        </div>
     );
 
 }

@@ -1,12 +1,12 @@
 import React from 'react';
 import PlantForm from './PlantForm';
+import background from '../media/pexels-scott-webb-305827.jpg';
 
-export default function App() {
-    console.log("here");
+export default function AppContent() {
     return (
-        <div>
-            
-            <PlantForm/>
+        <div style={{
+            backgroundImage: `url(${background}})`}}>
+            <PlantForm />
         </div>
     );
 }

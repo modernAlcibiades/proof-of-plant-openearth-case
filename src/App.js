@@ -10,7 +10,7 @@ export const AppStateContext = createContext(initState);
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initState);
-  console.log("Here");
+
   return (
     <AppStateContext.Provider value={[state, dispatch]}>
       <AppContent/>

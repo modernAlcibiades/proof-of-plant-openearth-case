@@ -59,6 +59,16 @@ body {
   text-align: right;
 }
 
+.dropdown {
+  width:100%
+}
+
+.error-message {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #e42b1e;
+}
+
 .displayImg {
   max-width:500px;
   margin: 8px, auto;

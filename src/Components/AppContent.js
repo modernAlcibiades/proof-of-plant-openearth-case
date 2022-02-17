@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
 import PlantForm from './PlantForm';
 import logo from '../media/JoshuaTree_3.png';

@@ -27,6 +27,9 @@ Stack Components
 
 Workflow
 - Upload information for verification
+  - Calendar React component for date/time
+  - Geolocator for live location
+  - 
 - Store a copy on IPFS, get IPFS hash
 - Create QR code from relevant information for certification
 - Scan QR code on wallet
@@ -35,8 +38,14 @@ Notes
 - Desktop frontend should show a QR code that can be scanned via Trinsic app
 - Mobile frontend should have a clickable link to open Trinsic app
 
-## TO DO
+### TO DO
+- Integrate with Google API for location / autofill via address search
+- Species search by common name from plants database
+## Long term plans
 - Build a Kanban / Jira / Trello board moving forward
+- Additional Functionality
+  - Recognize species from picture using Plant.id API
+  - Integrated Google Maps widget for location 
 - Server hosted on AWS (for secure submission and validation)
   - Nodejs / Django backend with MongoDB
   - Verify submitted information
@@ -44,7 +53,7 @@ Notes
   - Location data (maps API integration)
   - Image (camera API integration)
   - Trinsic SDK (currently in beta)
-- Features
+- Incentives and User Features
   - User dashboard
   - Achievements and Goals for individuals
   - Events

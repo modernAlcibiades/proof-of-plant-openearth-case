@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { Button, Paper, Grid } from "@mui/material";
+import React, { useContext, useState , useEffect} from 'react';
+import { Button, Paper, Grid, Stack} from "@mui/material";
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import DateTimePicker from 'react-datetime-picker';
@@ -13,14 +13,14 @@ const defaultValues = {
     datetime: "E.g. 2022/02/16 23:59", // TODO : Switch to UTC
     species: "E.g. Yucca brevifolia", // Should not be blank
     location: "E.g. 40.7580297387, -73.9855419283", // Sanity check
-    stage: "E.g. seed" // Growth stage of plant - seed, seedling, young, mature
+    stage: "E.g. seed" // Growth stage of plant - seed, seedling, sapling, mature
 };
 
 const list_stages = [
     "Seed",
-    "Seedling",
-    "Young Plant",
-    "Mature Plant"
+    "Seedling", 
+    "Sapling",
+    "Mature"
 ]
 
 const list_species = [
@@ -66,24 +66,31 @@ export default function PlantForm() {
     // Modal Display settings
     const [isOpen, setIsOpen] = useState(false);
     const [qr, setQR] = useState("");
-    const [modalText, setModalText] = useState(<label>{"Wait while we upload and certify your submission..."}</label>);
+    const [modalText, setModalText] = useState("");
     // const [modalState, setModalState] = useState("return false;");
     const [modalURL, setModalURL] = useState("");
 
-    //const [modalURL, setModalURL] = useState("https://trinsic.studio/url/e3d5b1f4-4c81-4c2e-904f-12fc9a75f1e6");
+    // Hook
+    useEffect(() => {
+        resetErrorMessage();
+    }, [lat, lng, species, stage, displayImg, datetime, tribute, uri]);
 
     // Event handlers
     function toggleModal() {
         setIsOpen(!isOpen);
     }
 
-    const getInstructions = () => {
-        console.log("Instructions should pop up");
-    }
-
     const uploadImage = (event) => {
-        setUri(URL.createObjectURL(event.target.files[0]));
-        setDisplayImg(event.target.files[0]);
+        try {
+            setUri(URL.createObjectURL(event.target.files[0]));
+            setDisplayImg(event.target.files[0]);
+        } catch (err) {
+            setErrorMessage("Invalid Image.");
+            resetUri();
+            resetDisplayImg();
+
+            
+        }
     }
 
     const uploadToIpfs = async event => {
@@ -107,19 +114,19 @@ export default function PlantForm() {
     }
 
     const generateQR = async event => {
+        setModalText(
+            <div>
+                <ReactLoading className="loading" type="spinningBubbles" color="#fff" /><br/>
+                <h5>{"Wait while we upload and certify your submission..."}</h5>
+            </div>);
         toggleModal();
-        let url = "https://trinsic.studio/url/06b09ac9-fb04-4ce6-b5bc-cc3710fe351e";
-        setModalURL(url);
-        setModalText(<a className="App-link" href={modalURL} target="_blank">Visit Trinsic for Offer Url and QR Code</a>);
-        return;
+        let credential = { offerUrl: "https://trinsic.studio/url/06b09ac9-fb04-4ce6-b5bc-cc3710fe351e" };
         try {
             if (lat > 180 || lat < -180) {
-                setErrorMessage(`Invalid Latitude ${lat}`);
-                return;
+                throw(`Invalid Latitude ${lat}`);
             }
             if (lng > 180 || lng < -180) {
-                setErrorMessage(`Invalid Longitude ${lng}`);
-                return;
+                throw(`Invalid Longitude ${lng}`);
             }
             const metadata = await uploadToIpfs(event);
             console.log(metadata);
@@ -130,13 +137,23 @@ export default function PlantForm() {
                 credentialValues: metadata
             });
             console.log(credential);
-            //setQR(URL.createObjectURL(credential.offerData));
+
             setModalURL(credential.offerUrl);
-            setModalText(<a href={credential.offerUrl} target="_blank">Visit Trinsic for Offer Url and QR Code</a>);
-            //window.open(URL, '_blank');
+            setModalText(<a
+                className="App-link"
+                href={credential.offerUrl}
+                target="_blank"
+                onClick={toggleModal}>Click to visit Trinsic for Offer Url and QR Code</a>);
         } catch (err) {
-            console.log(err)
-        }
+            console.log(err);
+            if (typeof (err) === 'string' || err instanceof String){
+                setErrorMessage(err);
+            } else {
+                console.log("Couldn't handle");
+                setErrorMessage("Failed to process. Verify inputs and try again.");
+            }
+            setIsOpen(false);
+        } 
     }
 
     const getCurrentLocation = (event) => {
@@ -151,6 +168,26 @@ export default function PlantForm() {
                 console.log(new Error("Permission denied"));
             }
         );
+    }
+
+    const getInstructions = (event) => {
+        setModalText(
+            <Paper className="instructions">
+                <h3>To issue a certification for a new plant, please do as follows</h3>
+                <ul>
+                    <li>Select <b>Date and Time</b>(optional) of planting</li>
+                    <li>Add GPS coordinates ie <b>(latitude, longitude)</b> of the plant.  You can <b>Use Current Location</b> of your device or follow the <a href="https://support.google.com/maps/answer/18539?hl=en&co=GENIE.Platform%3DAndroid">guide</a> to add a particular location.</li>
+                    <li>Choose <b>species</b> of the plant (or type new if not available)</li>
+                    <li>Choose <b>growth stage</b> of the plant from the dropwdown</li>
+                    <li>If you planted the tree as a tribute to someone or something, please mention them in the <b>Dedicated to </b> section</li>
+                    <li>Upload an image if you have one</li>
+                    <li>Click <b>Generate QR</b>. It will take a few seconds for the verification link to be ready.</li>
+                    <li>Once the link is ready, click on it, and scan the QR code with your Trinsic wallet</li>
+                    <li>If it doesn't work, please check the <b className="error-message">error message</b> at the bottom of your screen</li>
+                </ul> 
+            </Paper>
+        );
+        toggleModal();
     }
 
     return (
@@ -278,16 +315,10 @@ export default function PlantForm() {
                 contentLabel="My dialog"
                 ariaHideApp={false}
             >
-                <div classname="formWrapper">
-                    <ReactLoading type="spinningBubbles" color="#fff" />
-                    <div className="formContent">
-                        { //Scan QR code
-                        }
-                    </div>
-                    <img src={qr} />
+                <Stack className="loading" spacing={2}>
                     {modalText}
-                </div>
-                <Button className="btn" onClick={toggleModal}>Close</Button>
+                    <div className="modal-close" onClick={toggleModal}>Close</div>
+                </Stack>
             </Modal>
         </div>
     );

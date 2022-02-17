@@ -11,6 +11,7 @@ body {
   font-weight: 400;
   line-height: 1.5;
   color: #e6e6e6;
+  z-index:0;
 }
 
 
@@ -60,6 +61,9 @@ body {
   text-align: right;
 }
 
+.mid{
+  z-index:2;
+}
 .dropdown {
   display: flex;
   justify-content: center;
@@ -84,8 +88,38 @@ body {
   width:80%;
   height:80%;
   background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
-  z-index: 9999; /* Sit on top - higher than any other z-index in your site*/
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  z-index: 10; /* Sit on top - higher than any other z-index in your site*/
+}
+
+.loading {
+  width: 80%;
+  position: relative;
+  margin: 16px auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.instructions {
+  text-align:left;
+}
+
+.modal-close {
+  display: inline-block;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #0948f5;
+  text-align: center;
+  vertical-align: middle;
+}
+.modal-close:hover {
+  color: #09ddec;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-close:focus, .btn.focus {
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(245, 94, 47, 0.25);
 }
 
 .App-link {
@@ -95,7 +129,7 @@ body {
 .btn {
   display: inline-block;
   font-weight: 400;
-  color: #194979;
+  color: #27394b;
   text-align: center;
   vertical-align: middle;
 }

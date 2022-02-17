@@ -19,36 +19,53 @@ The scheme can be modified to include other relevant information.
 ### v0.1
 A decentralized serverless application without any verification. In this case, the submission is treated as public and valid, and can be used to generate a credential, and does not need any action from the developers / organization.
 
-Stack Components
+**Stack Components**
 - Serverless frontend form (React)
 - Trinsic API for QR code
 - nft.storage to upload and access IPFS content
 - Firebase deployment
 
-Workflow
+**Workflow**
+- Check instructions if needed
 - Upload information for verification
-  - Calendar React component for date/time
-  - Geolocator for live location
-  - 
 - Store a copy on IPFS, get IPFS hash
 - Create QR code from relevant information for certification
 - Scan QR code on wallet
 
-Notes
-- Desktop frontend should show a QR code that can be scanned via Trinsic app
-- Mobile frontend should have a clickable link to open Trinsic app
+**Features**
+- Calendar React component for date/time
+- Geolocator for live location
+- Species list for most common plants
+- Image of the planting / the plant can be uploaded along with the information
+- Metadata stored on IPFS, secure against centralized failures / failure of hyperledger
 
-### TO DO
-- Integrate with Google API for location / autofill via address search
-- Species search by common name from plants database
+**Screens**
+![Home Screen : on Finish](./src/media/Screen_main_final.png)
+![Home Screen : on Load](./src/media/Screen_main_initial.png)
+![Instructions](./src/media/Screen_instructions.png)
+![Overlay](./src/media/Screen_modal.png)
+![Trinsic Page : QR code and info](./src/media/Screen_trinsic.png)
+![Phone Screen : Credential Issuance](./src/media/Screen_credential_phone.jpg)
+
+
+
+**Known Issues**
+- [Material UI labels do not respect z-index]{https://github.com/mui/material-ui/issues/23499}
+- Toggle modal bugs out when called too close to each other
+- Trinsic API doesn't specify how QR code is generated, need to dig deeper
+
 ## Long term plans
 - Build a Kanban / Jira / Trello board moving forward
 - Additional Functionality
-  - Recognize species from picture using Plant.id API
+  - ML based species recognition from uploaded picture using Plant.id API
   - Integrated Google Maps widget for location 
-- Server hosted on AWS (for secure submission and validation)
+  - Captcha or access control to avoid spurious certifications via bots
+- Server-based solution for better security and performance
+  - Hosted on AWS
   - Nodejs / Django backend with MongoDB
   - Verify submitted information
+  - Data dashboard to aggregate statistics
+  - Integrate analytics
 - Android / IOS app 
   - Location data (maps API integration)
   - Image (camera API integration)
@@ -56,5 +73,5 @@ Notes
 - Incentives and User Features
   - User dashboard
   - Achievements and Goals for individuals
-  - Events
+  - Community Events
   - Display certification (with pictures maybe)
